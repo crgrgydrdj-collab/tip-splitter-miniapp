@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tip Splitter</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    :root{color-scheme:dark}
+    body{margin:0;background:#0b0b10;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:520px;margin:0 auto;padding:16px}
+    .card{margin-top:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .title{font-size:22px;font-weight:900}
+    .badge{font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    label{display:block;opacity:.75;font-size:12px;margin:10px 0 6px}
+    input,select{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.25);color:#fff;font-size:16px;outline:none}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:420px){.row{grid-template-columns:1fr}}
+    .btn{width:100%;padding:12px;border:none;border-radius:12px;background:#5b5cff;color:#fff;font-weight:900;font-size:16px;margin-top:10px}
+    .btn.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    .small{opacity:.75;font-size:12px;line-height:1.35;margin-top:8px}
+    .hr{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+    .big{font-size:18px;font-weight:900;margin:8px 0 6px}
+    .list{display:grid;gap:8px;margin-top:10px}
+    .rowItem{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:10px;border-radius:14px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08)}
+    .val{font-weight:900}
+    .unlock{margin-top:12px;padding:12px;border-radius:14px;border:1px dashed rgba(91,92,255,.55);background:rgba(91,92,255,.10)}
+    .proBox{display:none;margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(45,212,191,.35);background:rgba(45,212,191,.10)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div class="title">💸 Tip Splitter</div>
+        <div class="badge" id="proBadge">PRO: OFF</div>
+      </div>
+      <div class="small" id="ratesHint"></div>
+    </div>
+
+    <div class="card">
+      <label>Bill amount</label>
+      <input id="bill" type="number" inputmode="decimal" value="86" />
+
+      <div class="row">
+        <div>
+          <label>Currency</label>
+          <select id="ccy"></select>
+        </div>
+        <div>
+          <label>People</label>
+          <input id="people" type="number" inputmode="numeric" value="3" />
+        </div>
+      </div>
+
+      <label>Tip (%)</label>
+      <input id="tip" type="number" inputmode="decimal" value="15" />
+
+      <button class="btn" id="calcBtn" type="button">Calculate</button>
+
+      <div class="hr"></div>
+      <div class="big" id="out">—</div>
+      <div id="list" class="list"></div>
+
+      <!-- BASIC: купить PRO + промокод -->
+      <div id="unlockBox" class="unlock">
+        <div class="small"><b>PRO</b>: adds rounding</div>
+        <button class="btn secondary" id="getProBtn" type="button">Get PRO ($2) → message @xarm0</button>
+
+        <label>Enter promo code</label>
+        <input id="promo" placeholder="TIPPRO-001" />
+        <button class="btn" id="unlockBtn" type="button">Unlock PRO</button>
+      </div>
+
+      <!-- PRO: округление -->
+      <div id="proBox" class="proBox">
+        <div class="small"><b>PRO enabled ✅</b> Rounding:</div>
+        <label>Rounding mode</label>
+        <select id="round">
+          <option value="none">No rounding</option>
+          <option value="up_050">Round up to 0.50</option>
+          <option value="up_100">Round up to whole number</option>
+        </select>
+
+        <button class="btn secondary" id="proOffBtn" type="button">Turn OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
