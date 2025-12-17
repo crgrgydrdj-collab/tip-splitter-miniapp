@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tip Splitter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: #0f0f0f;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #1c1c1e;
+      border-radius: 20px;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    input {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 14px;
+      background: #4f46e5;
+      color: white;
+      font-weight: 600;
+    }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💸 Tip Splitter</h1>
+
+    <label>Bill amount ($)</label>
+    <input id="bill" type="number" placeholder="86" />
+
+    <label>Tip (%)</label>
+    <input id="tip" type="number" placeholder="15" />
+
+    <label>People</label>
+    <input id="people" type="number" placeholder="3" />
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const bill = parseFloat(document.getElementById("bill").value);
+      const tip = parseFloat(document.getElementById("tip").value);
+      const people = parseInt(document.getElementById("people").value);
+
+      if (!bill || !tip || !people || people <= 0) {
+        document.getElementById("result").innerText = "❗ Please fill all fields";
+        return;
+      }
+
+      const total = bill + (bill * tip / 100);
+      const perPerson = total / people;
+
+      document.getElementById("result").innerText =
+        `Each person pays $${perPerson.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
