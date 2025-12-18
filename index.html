@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tip Splitter</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b10;
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    }
+    .wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background: #5b5cff;
+      color: white;
+      font-weight: bold;
+    }
+    .small {
+      opacity: .7;
+      font-size: 13px;
+    }
+    .lang {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,.2);
+      width: auto;
+      padding: 6px 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="card top">
+      <b id="title">Tip Splitter</b>
+      <select id="lang" class="lang">
+        <option value="en">EN</option>
+        <option value="ru">RU</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <label id="billLabel"></label>
+      <input id="bill" type="number" value="86" />
+
+      <label id="peopleLabel"></label>
+      <input id="people" type="number" value="3" />
+
+      <label id="tipLabel"></label>
+      <input id="tip" type="number" value="15" />
+
+      <button id="calcBtn"></button>
+
+      <p class="small" id="result"></p>
+    </div>
+
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
