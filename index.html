@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tip Splitter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg:#0b0c10;
+      --card:#141725;
+      --card2:#1b2032;
+      --ink:#f3f4f8;
+      --muted:#a2a8bd;
+      --border:rgba(255,255,255,.08);
+      --accent:#6c6cff;
+      --accent2:#2dd97b;
+      --bad:#ff5b6b;
+      --radius:18px;
+      --shadow: 0 24px 70px rgba(0,0,0,.55);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 600px at 12% -10%, rgba(108,108,255,.28), transparent 60%),
+        radial-gradient(700px 500px at 90% 10%, rgba(45,217,123,.16), transparent 55%),
+        radial-gradient(700px 700px at 50% 120%, rgba(255,255,255,.06), transparent 60%),
+        var(--bg);
+    }
+    .wrap{max-width:560px;margin:0 auto;padding:16px}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--border);
+      border-radius: calc(var(--radius) + 4px);
+      box-shadow: var(--shadow);
+      padding:16px;
+      overflow:hidden;
+    }
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+    }
+    .brand{
+      display:flex;flex-direction:column;gap:4px;
+    }
+    .titleRow{display:flex;align-items:center;gap:10px}
+    h1{margin:0;font-size:20px;letter-spacing:.2px}
+    .sub{margin:0;color:var(--muted);font-size:12px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(108,108,255,.25);
+      background: rgba(108,108,255,.14);
+      color:#e7e7ff;
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .pill.proOn{
+      border:1px solid rgba(45,217,123,.25);
+      background: rgba(45,217,123,.14);
+      color:#dfffee;
+    }
+
+    select,input,button{
+      width:100%;
+      border-radius:14px;
+      border:1px solid var(--border);
+      padding:12px;
+      font-size:16px;
+      background: var(--card2);
+      color: var(--ink);
+    }
+    input::placeholder{color:rgba(162,168,189,.6)}
+    input:focus, select:focus{
+      outline:none;
+      border-color: rgba(108,108,255,.35);
+      box-shadow: 0 0 0 3px rgba(108,108,255,.14);
+    }
+    .langSel{max-width:86px}
+
+    .tabs{
+      display:flex;gap:10px;margin:12px 0 6px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 16px;
+      padding:6px;
+    }
+    .tabBtn{
+      flex:1;
+      background: transparent;
+      border:none;
+      padding:10px 12px;
+      border-radius: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      cursor:pointer;
+      transition: transform .08s ease, background .18s ease, color .18s ease;
+    }
+    .tabBtn:active{transform:scale(.99)}
+    .tabBtn.active{
+      background: linear-gradient(180deg, rgba(108,108,255,.38), rgba(108,108,255,.16));
+      color: var(--ink);
+      border: 1px solid rgba(108,108,255,.25);
+    }
+
+    .section{
+      margin-top:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding:12px;
+    }
+    .sectionTitle{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin:0 0 10px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 13px;
+      color: #e9ebf6;
+    }
+    .hint{font-size:12px;color:var(--muted);line-height:1.35}
+    .grid{display:grid;gap:10px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    label{font-size:12px;color:var(--muted);display:block;margin:2px 0 6px}
+
+    .primary{
+      margin-top:12px;
+      border:none;
+      border-radius: 16px;
+      padding:14px;
+      font-weight: 950;
+      background: linear-gradient(180deg, rgba(108,108,255,1), rgba(108,108,255,.75));
+      box-shadow: 0 16px 34px rgba(108,108,255,.23);
+      cursor:pointer;
+      transition: transform .08s ease, filter .12s ease;
+    }
+    .primary:active{transform:scale(.99);filter:brightness(.98)}
+
+    .tipBtns{display:none;gap:8px;margin-top:8px}
+    .tipBtns button{
+      flex:1;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      font-weight: 950;
+      padding:10px 0;
+      cursor:pointer;
+    }
+    .tipBtns button:active{transform:scale(.99)}
+
+    .proBox{display:none}
+    .proLock{
+      display:grid;gap:10px;
+      padding:12px;
+      border-radius: 14px;
+      border:1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.12);
+    }
+    .msg{font-size:12px}
+    .ok{color:var(--accent2);font-weight:950}
+    .bad{color:var(--bad);font-weight:950}
+
+    .resultBox{
+      display:grid;gap:8px;
+      padding-top:8px;
+    }
+    .resultPill{
+      display:flex;justify-content:space-between;align-items:center;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius: 14px;
+      padding:12px;
+    }
+    .resultPill b{font-size:18px}
+    .copyBtn{
+      display:none;
+      margin-top:10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      border-radius: 16px;
+      cursor:pointer;
+    }
+    .copyBtn:active{transform:scale(.99)}
+    .history{
+      display:none;
+      margin-top:10px;
+      gap:8px;
+    }
+    .historyItem{
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      padding:10px 12px;
+      border-radius: 14px;
+      font-size:12px;
+      color:#e9ebf6;
+      line-height:1.35;
+    }
+
+    .footerNote{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+    .linkStrong{color:#e7e7ff;font-weight:950}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+
+      <div class="top">
+        <div class="brand">
+          <div class="titleRow">
+            <h1 id="uiTitle">💸 Tip Splitter</h1>
+            <span id="proPill" class="pill">BASE</span>
+          </div>
+          <p class="sub" id="uiSub">Fast bill split with tips — simple and clean.</p>
+        </div>
+
+        <select id="lang" class="langSel" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="ru">RU</option>
+        </select>
+      </div>
+
+      <div class="tabs">
+        <button id="baseBtn" class="tabBtn active" type="button">BASE</button>
+        <button id="proBtn" class="tabBtn" type="button">PRO</button>
+      </div>
+
+      <!-- 1) DETAILS -->
+      <div class="section">
+        <div class="sectionTitle">
+          <span id="s1">1) Details</span>
+          <span class="pill" id="step1Pill">INPUT</span>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label id="l_bill" for="bill">Bill amount</label>
+            <input id="bill" type="number" inputmode="decimal" value="86" />
+          </div>
+
+          <div class="row2">
+            <div>
+              <label id="l_people" for="people">People</label>
+              <input id="people" type="number" inputmode="numeric" value="3" />
+            </div>
+            <div>
+              <label id="l_cur" for="currency">Currency</label>
+              <select id="currency">
+                <option value="$">$ USD</option>
+                <option value="€">€ EUR</option>
+                <option value="₽">₽ RUB</option>
+                <option value="₮">₮ USDT</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint" id="hint1" style="margin-top:10px">
+          Enter the bill and how many people split it.
+        </div>
+      </div>
+
+      <!-- 2) TIPS -->
+      <div class="section">
+        <div class="sectionTitle">
+          <span id="s2">2) Tips</span>
+          <span class="pill" id="step2Pill">BASE</span>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label id="l_tip" for="tip">Tip %</label>
+            <input id="tip" type="number" inputmode="numeric" value="15" />
+          </div>
+
+          <!-- PRO: tip buttons -->
+          <div id="tipBtns" class="tipBtns">
+            <button type="button" onclick="setTip(10)">10%</button>
+            <button type="button" onclick="setTip(15)">15%</button>
+            <button type="button" onclick="setTip(18)">18%</button>
+            <button type="button" onclick="setTip(20)">20%</button>
+            <button type="button" onclick="setTip(25)">25%</button>
+          </div>
+
+          <!-- PRO: service fee -->
+          <div id="feeWrap" style="display:none">
+            <label id="l_fee" for="fee">Service fee %</label>
+            <input id="fee" type="number" inputmode="numeric" value="0" />
+            <div class="hint" id="feeHint" style="margin-top:6px">
+              Optional extra fee (service / delivery / etc.).
+            </div>
+          </div>
+        </div>
+
+        <div class="hint" id="hint2" style="margin-top:10px">
+          Base: enter tip manually. PRO: quick buttons + extra fee.
+        </div>
+      </div>
+
+      <!-- PRO PANEL (only on PRO tab) -->
+      <div id="proBox" class="section proBox">
+        <div class="sectionTitle">
+          <span id="sPro">PRO Settings</span>
+          <span class="pill" id="proStatePill">LOCKED</span>
+        </div>
+
+        <div id="proLocked" class="proLock">
+          <div class="hint" id="proHint">
+            To unlock PRO, enter a promo code. Get a code by writing to <span class="linkStrong">@xarm0</span>.
+          </div>
+          <input id="promo" placeholder="TS-001" />
+          <button class="primary" type="button" onclick="unlock()">Unlock PRO</button>
+          <div id="promoMsg" class="msg"></div>
+        </div>
+
+        <div id="proUnlocked" style="display:none">
+          <div class="hint" id="proOnHint" style="margin-bottom:10px">
+            PRO is active on this device ✅
+          </div>
+
+          <label id="l_round" for="round">Rounding</label>
+          <select id="round">
+            <option value="none">Off</option>
+            <option value="up">Round up</option>
+            <option value="whole">Nearest whole</option>
+            <option value="half">Nearest 0.50</option>
+          </select>
+
+          <div class="hint" id="roundHint" style="margin-top:8px">
+            Rounding applies to “Each pays”.
+          </div>
+        </div>
+      </div>
+
+      <!-- 3) RESULT -->
+      <div class="section">
+        <div class="sectionTitle">
+          <span id="s3">3) Result</span>
+          <span class="pill" id="step3Pill">DONE</span>
+        </div>
+
+        <button id="calcBtn" class="primary" type="button" onclick="calc()">Calculate</button>
+
+        <div id="res" class="resultBox" style="margin-top:10px"></div>
+
+        <button id="copyBtn" class="copyBtn" type="button" onclick="copyText()">📋 Copy summary</button>
+
+        <div id="historyBox" class="history"></div>
+      </div>
+
+      <div class="footerNote" id="footerNote">
+        PRO unlock: write to <span class="linkStrong">@xarm0</span> → pay $2 → receive promo code.
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // ======= Promo codes (200) =======
+  // Generated safely so code never breaks when copying.
+  const PROMO_CODES = new Set();
+  for (let i = 1; i <= 200; i++) {
+    const code = "TS-" + String(i).padStart(3, "0");
+    PROMO_CODES.add(code);
+  }
+
+  // ======= State =======
+  let pro = false;
+  const LS_PRO = "ts_pro_unlocked_v1";
+  const LS_HIST = "ts_history_v1";
+  const MAX_HIST = 5;
+
+  function normalizeCode(s){
+    return String(s || "")
+      .trim()
+      .toUpperCase()
+      .replace(/[‐–—−]/g, "-") // any dash -> normal dash
+      .replace(/\s+/g, "");
+  }
+
+  // ======= i18n =======
+  const t = {
+    en: {
+      title: "💸 Tip Splitter",
+      sub: "Fast bill split with tips — simple and clean.",
+      s1: "1) Details",
+      s2: "2) Tips",
+      s3: "3) Result",
+      bill: "Bill amount",
+      people: "People",
+      cur: "Currency",
+      tip: "Tip %",
+      fee: "Service fee %",
+      hint1: "Enter the bill and how many people split it.",
+      hint2: "Base: enter tip manually. PRO: quick buttons + extra fee.",
+      feeHint: "Optional extra fee (service / delivery / etc.).",
+      proSettings: "PRO Settings",
+      proHint: "To unlock PRO, enter a promo code. Get a code by writing to @xarm0.",
+      unlock: "Unlock PRO",
+      proOn: "PRO is active on this device ✅",
+      rounding: "Rounding",
+      roundHint: "Rounding applies to “Each pays”.",
+      calc: "Calculate",
+      total: "Total",
+      each: "Each pays",
+      copy: "📋 Copy summary",
+      copied: "Copied ✅",
+      invalid: "Invalid code",
+      ok: "PRO activated!",
+      footer: "PRO unlock: write to @xarm0 → pay $2 → receive promo code."
+    },
+    ru: {
+      title: "💸 Калькулятор чаевых",
+      sub: "Быстро делит счёт с чаевыми — просто и понятно.",
+      s1: "1) Данные",
+      s2: "2) Чаевые",
+      s3: "3) Результат",
+      bill: "Сумма счёта",
+      people: "Людей",
+      cur: "Валюта",
+      tip: "Чаевые %",
+      fee: "Сервисный сбор %",
+      hint1: "Введи сумму и сколько людей делят счёт.",
+      hint2: "База: вводишь % вручную. PRO: кнопки + доп.сбор.",
+      feeHint: "Доп. сбор (сервис / доставка и т.п.) — по желанию.",
+      proSettings: "Настройки PRO",
+      proHint: "Чтобы открыть PRO, введи промокод. Получить код: напиши @xarm0.",
+      unlock: "Открыть PRO",
+      proOn: "PRO активирован на этом устройстве ✅",
+      rounding: "Округление",
+      roundHint: "Округление применяется к «С каждого».",
+      calc: "Посчитать",
+      total: "Итого",
+      each: "С каждого",
+      copy: "📋 Скопировать расчёт",
+      copied: "Скопировано ✅",
+      invalid: "Неверный код",
+      ok: "PRO активирован!",
+      footer: "PRO: напиши @xarm0 → оплата $2 → получаешь промокод."
+    }
+  };
+
+  function L(){ return lang.value === "ru" ? "ru" : "en"; }
+
+  // ======= UI helpers =======
+  function setTip(v){ tip.value = v; }
+
+  function setTab(tab){
+    const isProTab = tab === "pro";
+    baseBtn.classList.toggle("active", !isProTab);
+    proBtn.classList.toggle("active", isProTab);
+
+    proBox.style.display = isProTab ? "block" : "none";
+
+    // step2 badge text
+    step2Pill.textContent = pro ? "PRO" : "BASE";
+
+    // top pill
+    proPill.textContent = pro ? "PRO ON" : (isProTab ? "PRO" : "BASE");
+    proPill.classList.toggle("proOn", pro);
+
+    // in PRO tab show state pill
+    proStatePill.textContent = pro ? "UNLOCKED" : "LOCKED";
+    proStatePill.classList.toggle("proOn", pro);
+  }
+
+  function setProUI(){
+    // PRO features in tips section
+    tipBtns.style.display = pro ? "flex" : "none";
+    feeWrap.style.display = pro ? "block" : "none";
+
+    // copy + history only in PRO
+    copyBtn.style.display = pro ? "block" : "none";
+    historyBox.style.display = pro ? "grid" : "none";
+
+    // PRO panel sections
+    proLocked.style.display = pro ? "none" : "grid";
+    proUnlocked.style.display = pro ? "block" : "none";
+
+    // top pill
+    proPill.textContent = pro ? "PRO ON" : (proBtn.classList.contains("active") ? "PRO" : "BASE");
+    proPill.classList.toggle("proOn", pro);
+
+    // step2 badge
+    step2Pill.textContent = pro ? "PRO" : "BASE";
+  }
+
+  function applyLang(){
+    const x = t[L()];
+    uiTitle.textContent = x.title;
+    uiSub.textContent = x.sub;
+
+    s1.textContent = x.s1;
+    s2.textContent = x.s2;
+    s3.textContent = x.s3;
+
+    l_bill.textContent = x.bill;
+    l_people.textContent = x.people;
+    l_cur.textContent = x.cur;
+
+    l_tip.textContent = x.tip;
+    l_fee.textContent = x.fee;
+
+    hint1.textContent = x.hint1;
+    hint2.textContent = x.hint2;
+    feeHint.textContent = x.feeHint;
+
+    sPro.textContent = x.proSettings;
+    proHint.textContent = x.proHint;
+
+    // Unlock button text
+    // (it's inside proLocked, but it's a button with class primary in proLocked)
+    proLocked.querySelector("button.primary").textContent = x.unlock;
+
+    proOnHint.textContent = x.proOn;
+
+    l_round.textContent = x.rounding;
+    roundHint.textContent = x.roundHint;
+
+    calcBtn.textContent = x.calc;
+    copyBtn.textContent = x.copy;
+
+    footerNote.textContent = x.footer;
+  }
+
+  // ======= PRO unlock =======
+  function unlock(){
+    const code = normalizeCode(promo.value);
+    const x = t[L()];
+
+    if (PROMO_CODES.has(code)) {
+      pro = true;
+      localStorage.setItem(LS_PRO, "1");
+      promoMsg.className = "msg ok";
+      promoMsg.textContent = x.ok;
+
+      setProUI();
+      setTab("pro");
+      renderHistory(); // show if exists
+    } else {
+      promoMsg.className = "msg bad";
+      promoMsg.textContent = x.invalid;
+    }
+  }
+
+  // ======= Calc + History =======
+  function roundValue(v){
+    if(!pro) return v;
+    const mode = round.value;
+    if (mode === "up") return Math.ceil(v);
+    if (mode === "whole") return Math.round(v);
+    if (mode === "half") return Math.round(v * 2) / 2;
+    return v;
+  }
+
+  function getHistory(){
+    if(!pro) return [];
+    try{
+      const raw = localStorage.getItem(LS_HIST);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    }catch(e){ return []; }
+  }
+
+  function saveHistory(arr){
+    if(!pro) return;
+    localStorage.setItem(LS_HIST, JSON.stringify(arr.slice(0, MAX_HIST)));
+  }
+
+  function renderHistory(){
+    if(!pro) return;
+    const x = t[L()];
+    const arr = getHistory();
+    historyBox.innerHTML = "";
+
+    if (arr.length === 0) {
+      historyBox.innerHTML = `<div class="historyItem">${L()==="ru" ? "История появится после расчётов." : "History will appear after calculations."}</div>`;
+      return;
+    }
+
+    for (const item of arr) {
+      const div = document.createElement("div");
+      div.className = "historyItem";
+      div.textContent = item;
+      historyBox.appendChild(div);
+    }
+  }
+
+  function calc(){
+    const b = Number(bill.value || 0);
+    const p = Number(people.value || 0);
+    const tipP = Number(tip.value || 0);
+    const feeP = pro ? Number(fee.value || 0) : 0;
+
+    if (!b || !p) {
+      res.innerHTML = `<div class="hint">${L()==="ru" ? "Заполни сумму и людей." : "Fill bill and people."}</div>`;
+      return;
+    }
+
+    const total = b + (b * tipP / 100) + (b * feeP / 100);
+    const eachRaw = total / p;
+    const each = roundValue(eachRaw);
+
+    const x = t[L()];
+    const cur = currency.value;
+
+    res.innerHTML = `
+      <div class="resultPill"><span>${x.total}</span><b>${cur}${total.toFixed(2)}</b></div>
+      <div class="resultPill"><span>${x.each}</span><b>${cur}${each.toFixed(2)}</b></div>
+    `;
+
+    // Save to history only in PRO
+    if (pro) {
+      const line = (L()==="ru")
+        ? `Счёт: ${cur}${b.toFixed(2)} | Чаевые: ${tipP}% | Сбор: ${feeP}% | Людей: ${p} | С каждого: ${cur}${each.toFixed(2)}`
+        : `Bill: ${cur}${b.toFixed(2)} | Tip: ${tipP}% | Fee: ${feeP}% | People: ${p} | Each: ${cur}${each.toFixed(2)}`;
+
+      const arr = getHistory();
+      arr.unshift(line);
+      const trimmed = arr.slice(0, MAX_HIST);
+      saveHistory(trimmed);
+      renderHistory();
+    }
+  }
+
+  async function copyText(){
+    const x = t[L()];
+    const txt = res.innerText.trim();
+    if(!txt) return;
+    try{
+      await navigator.clipboard.writeText(txt);
+      const old = copyBtn.textContent;
+      copyBtn.textContent = x.copied;
+      setTimeout(()=>copyBtn.textContent = x.copy, 900);
+    }catch(e){
+      // fallback
+      alert(txt);
+    }
+  }
+
+  // ======= Init =======
+  // Restore PRO if unlocked earlier
+  pro = (localStorage.getItem(LS_PRO) === "1");
+
+  // Bind tabs
+  baseBtn.addEventListener("click", ()=>setTab("base"));
+  proBtn.addEventListener("click", ()=>setTab("pro"));
+  lang.addEventListener("change", ()=>{ applyLang(); renderHistory(); });
+
+  // Apply initial UI
+  applyLang();
+  setProUI();
+  setTab("base");
+  if(pro) renderHistory();
+</script>
+</body>
+</html>
